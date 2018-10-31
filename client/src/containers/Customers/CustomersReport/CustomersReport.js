@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const CustomersReport = ({ customers }) => (
   <div>
@@ -9,5 +10,9 @@ const CustomersReport = ({ customers }) => (
     </p>
   </div>
 );
+
+CustomersReport.propTypes = {
+  customers: PropTypes.array
+};
 
 export default CustomersReport;

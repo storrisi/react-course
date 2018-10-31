@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const SearchField = ({ onSearch }) => (
   <div>
@@ -9,5 +10,9 @@ const SearchField = ({ onSearch }) => (
     />
   </div>
 );
+
+SearchField.propTypes = {
+  onSearch: PropTypes.func
+};
 
 export default SearchField;

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Button from "../../../components/UI/Button";
 import Date from "../../../components/styled/Date";
 import Amount from "../../../components/styled/Amount";
@@ -40,6 +41,12 @@ const CustomersList = ({ items, updateItem, removeItem }) => {
       </tbody>
     </table>
   );
+};
+
+CustomersList.propTypes = {
+  items: PropTypes.array,
+  updateItem: PropTypes.func,
+  removeItem: PropTypes.func
 };
 
 export default CustomersList;

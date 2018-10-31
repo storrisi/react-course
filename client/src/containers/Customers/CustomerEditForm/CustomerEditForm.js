@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import Button from "../../../components/UI/Button";
 
 class CustomerEditForm extends Component {
@@ -47,5 +48,12 @@ class CustomerEditForm extends Component {
     );
   }
 }
+
+CustomerEditForm.propTypes = {
+  validationError: PropTypes.bool,
+  onSubmit: PropTypes.func,
+  isUpdating: PropTypes.func,
+  handleChange: PropTypes.func
+};
 
 export default CustomerEditForm;
