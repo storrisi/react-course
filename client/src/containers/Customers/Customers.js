@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import uuidv4 from "uuid/v4";
-import { Date, Amount } from "./style";
 import { validateFields } from "../../utils/formValidation";
+import CustomersList from "./CustomersList/CustomersList";
+import CustomerEditForm from "./CustomerEditForm";
+import SearchField from "../../components/UI/SearchField/SearchField";
+import CustomersReport from "./CustomersReport";
 
 class Customers extends Component {
   constructor(props) {
@@ -33,7 +36,7 @@ class Customers extends Component {
     this.state = {
       customers: this.customers,
       currentCustomer: {},
-      isUpdating: false
+      validationError: false
     };
   }
 
@@ -61,8 +64,8 @@ class Customers extends Component {
     }
     this.setState({
       customers: updatedList,
-      currentCustomer: {},
       isUpdating: false,
+      currentCustomer: {},
       validationError: false
     });
   };
@@ -81,7 +84,7 @@ class Customers extends Component {
     });
   };
 
-  getValue = value => this.state.currentCustomer[value] || "";
+  getValue = value => this.props.customer[value] || "";
   handleChange = (value, name) =>
     this.setState(
       { currentCustomer: { ...this.state.currentCustomer, [name]: value } },
@@ -89,7 +92,14 @@ class Customers extends Component {
     );
 
   render() {
-    const { customers, filter, isUpdating, validationError } = this.state;
+    const {
+      customers,
+      filter,
+      validationError,
+      currentCustomer,
+      isUpdating
+    } = this.state;
+
     const filteredCustomers = filter
       ? customers.filter(
           customer =>
@@ -97,105 +107,27 @@ class Customers extends Component {
             customer.last_name.toLowerCase().includes(filter)
         )
       : customers;
+
     return (
       <section>
-        <div>
-          <div>
-            <label>First Name</label>
-            <input
-              type="text"
-              value={this.getValue("first_name")}
-              onChange={event =>
-                this.handleChange(event.target.value, "first_name")
-              }
-            />
-          </div>
-          <div>
-            <label>Last Name</label>
-            <input
-              type="text"
-              value={this.getValue("last_name")}
-              onChange={event =>
-                this.handleChange(event.target.value, "last_name")
-              }
-            />
-          </div>
-          <div>
-            <label>Birth Date</label>
-            <input
-              type="date"
-              value={this.getValue("date")}
-              onChange={event => this.handleChange(event.target.value, "date")}
-            />
-          </div>
-          <div>
-            <label>Balance</label>
-            <input
-              type="number"
-              value={this.getValue("balance")}
-              onChange={event =>
-                this.handleChange(event.target.value * 1, "balance")
-              }
-            />
-          </div>
-          <button onClick={() => this.handleFormSubmit()}>
-            {isUpdating ? "Edit Customer" : "Add a new Customer"}
-          </button>
-          {validationError && <p>All fields are mandatory</p>}
-        </div>
-        <label>Search by Name or Surname</label>
-        <input
-          type="text"
-          onChange={event =>
-            this.setState({ filter: event.target.value.toLowerCase() })
-          }
+        <CustomerEditForm
+          customer={currentCustomer}
+          onSubmit={this.handleFormSubmit}
+          isUpdating={isUpdating}
+          validationError={validationError}
+          handleChange={this.handleChange}
         />
+        <SearchField onSearch={value => this.setState({ filter: value })} />
         {customers.length > 0 ? (
-          <table>
-            <thead>
-              <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Birth Date</th>
-                <th>Balance</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredCustomers.map(customer => (
-                <tr key={customer.id}>
-                  <td>{customer.first_name}</td>
-                  <td>{customer.last_name}</td>
-                  <td>
-                    <Date>{customer.date}</Date>
-                  </td>
-                  <td>
-                    <Amount>{customer.balance}</Amount>
-                  </td>
-                  <td>
-                    <button onClick={() => this.updateItem(customer.id)}>
-                      Update Item
-                    </button>
-                  </td>
-                  <td>
-                    <button onClick={() => this.removeItem(customer.id)}>
-                      Remove Item
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <CustomersList
+            items={filteredCustomers}
+            removeItem={this.removeItem}
+            updateItem={this.updateItem}
+          />
         ) : (
           <p>No Customers</p>
         )}
-        <p>Total customers: {filteredCustomers.length}</p>
-        <p>
-          Total balance:{" "}
-          {filteredCustomers.reduce(
-            (previous, customer) => previous + customer.balance,
-            0
-          )}
-        </p>
+        <CustomersReport customers={filteredCustomers} />
       </section>
     );
   }
