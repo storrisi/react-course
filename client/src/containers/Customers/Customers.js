@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import uuidv4 from "uuid/v4";
-import style from "./App.module.css";
 import { Date, Amount } from "./style";
+import { validateFields } from "../../utils/formValidation";
 
-class App extends Component {
+class Customers extends Component {
   constructor(props) {
     super(props);
     this.customers = [
@@ -37,18 +37,15 @@ class App extends Component {
     };
   }
 
-  validateFields = () => {
-    const { currentCustomer } = this.state;
-    const fieldsToValidate = ["first_name", "last_name", "date", "balance"];
-    if (Object.keys(currentCustomer).length === 0) return false;
-    return fieldsToValidate.every(item =>
-      Object.keys(currentCustomer).includes(item)
-    );
-  };
-
   handleFormSubmit = () => {
     const { customers, currentCustomer, isUpdating } = this.state;
-    if (!this.validateFields()) return this.setState({ validationError: true });
+    if (
+      !validateFields(
+        ["first_name", "last_name", "date", "balance"],
+        currentCustomer
+      )
+    )
+      return this.setState({ validationError: true });
     const updatedList = customers;
     const updatedItem = {
       ...currentCustomer,
@@ -85,10 +82,7 @@ class App extends Component {
   };
 
   getValue = value => this.state.currentCustomer[value] || "";
-  handleChange = (
-    value,
-    name //value = 'prova' , name = 'first_name' {...this.state.currentCustomer, first_name: value} currentCustomer['first_name'] === currentCustomer.first_name
-  ) =>
+  handleChange = (value, name) =>
     this.setState(
       { currentCustomer: { ...this.state.currentCustomer, [name]: value } },
       () => console.log(this.state)
@@ -104,7 +98,7 @@ class App extends Component {
         )
       : customers;
     return (
-      <div className={style.AppHeader}>
+      <section>
         <div>
           <div>
             <label>First Name</label>
@@ -202,9 +196,9 @@ class App extends Component {
             0
           )}
         </p>
-      </div>
+      </section>
     );
   }
 }
 
-export default App;
+export default Customers;

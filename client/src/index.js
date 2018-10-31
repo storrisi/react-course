@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { AppContainer } from "react-hot-loader";
-import "./index.css";
-import App from "./App";
+import "./shared/styles/index.css";
+import App from "./containers/App";
 import * as serviceWorker from "./serviceWorker";
 
 const render = Component => {
@@ -17,7 +17,7 @@ const render = Component => {
 render(App);
 
 if (module.hot) {
-  module.hot.accept("./App", () => {
+  module.hot.accept("./containers/App", () => {
     render(App);
   });
 }
