@@ -1,0 +1,15 @@
+.text {
+    background:red;
+    padding: 5px;
+}
+.date {
+    background: green;
+    padding: 5px;
+}
+.amount {
+    background: yellow
+}
+
+.rich{
+    color: red
+}
