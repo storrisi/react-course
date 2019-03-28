@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream:client/src/App.css
 .App {
   text-align: center;
   background: blue;
@@ -19,20 +18,17 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-=======
-.text {
-    background:red;
-    padding: 5px;
-}
-.date {
-    background: green;
-    padding: 5px;
-}
-.amount {
-    background: yellow
->>>>>>> Stashed changes:client/src/containers/App/App.module.css
 }
 
-.rich{
-    color: red
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

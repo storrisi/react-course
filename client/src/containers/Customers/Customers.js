@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import uuidv4 from 'uuid/v4'
-import './App.css';
 import {Text, DateText, Amount} from './style'
  
-class App extends Component {
+class Customers extends Component {
   constructor(props) {
     super(props)
 
@@ -134,24 +133,27 @@ class App extends Component {
             <label>Last Name</label>
             <input
               type="text"
+              name="last_name"
               value={this.getValue("last_name")}
-              onChange={event => this.handleChange(event.target.value, "last_name")}
+              onChange={event => this.handleChange(event)}
             />
           </div>
           <div>
             <label>Birth Date</label>
             <input
               type="date" //yyyy-mm-dd
+              name="birth_date"
               value={this.getValue("birth_date") && new Date(this.getValue("birth_date")).toISOString().slice(0,10)}
-              onChange={event => this.handleChange(event.target.value, "birth_date")}
+              onChange={event => this.handleChange(event)}
             />
           </div>
           <div>
             <label>Balance</label>
             <input
               type="number"
+              name="amount"
               value={this.getValue("amount")}
-              onChange={event => this.handleChange(event.target.value * 1, "amount")}
+              onChange={event => this.handleChange(event)}
             />
           </div>
           <button onClick={this.handleFormSubmit}>
@@ -164,4 +166,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default Customers;
