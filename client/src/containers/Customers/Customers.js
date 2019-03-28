@@ -1,7 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import uuidv4 from 'uuid/v4'
-import {Text, DateText, Amount} from './style'
- 
+import CustomersReportBar from './CustomersReportBar'
+import SearchField from '../../components/UI/SearchField';
+import CustomersList from './CustomersList';
+import CustomerEditForm from './CustomersEditForm';
 class Customers extends Component {
   constructor(props) {
     super(props)
@@ -40,16 +42,6 @@ class Customers extends Component {
   removeItem = id => {
     this.setState(state => {return {customers: state.customers.filter(c => c.id !== id)}})
   }
-
-  renderRow = (item) => 
-    <tr key={item.id}>
-      <td><Text>{item.first_name}</Text></td>
-      <td><Text>{item.last_name}</Text></td>
-      <td><DateText>{item.birth_date.toLocaleDateString()}</DateText></td>
-      <td><Amount>{item.amount}</Amount> </td>
-      <td><button onClick={() => this.updateItem(item)}>Update Customer</button></td>
-      <td><button onClick={() => this.removeItem(item.id)}>Delete Customer</button></td>
-    </tr>
 
   getValue = value => this.state.currentCustomer[value] || "";
   
@@ -100,7 +92,7 @@ class Customers extends Component {
   }
 
   render() {
-    const {customers, search, isUpdating, validationError} = this.state
+    const {customers, search, isUpdating, validationError, currentCustomer} = this.state
 
     const filteredItems = search ? customers.filter(customer => 
       customer.first_name.toLowerCase().startsWith(search) 
@@ -110,57 +102,10 @@ class Customers extends Component {
 
     return (
       <div>
-        <input type="text" placeholder="Search..." onChange={event => this.setState({search: event.target.value})} />
-        <table>
-            <tbody>
-              {filteredItems.length > 0 && filteredItems.map(item => this.renderRow(item))}
-            </tbody>
-        </table>
-        <p>Total amount of customers: {filteredItems.length}</p>
-        <p>Total amount of balances: {filteredItems.reduce((previous, current) => previous + current.amount, 0)}</p>
-        <div>
-          <h2>Update Customers Data</h2>
-          <div>
-            <label>First Name</label>
-            <input
-              type="text"
-              name="first_name"
-              value={this.getValue("first_name")}
-              onChange={event => this.handleChange(event)}
-            />
-          </div>
-          <div>
-            <label>Last Name</label>
-            <input
-              type="text"
-              name="last_name"
-              value={this.getValue("last_name")}
-              onChange={event => this.handleChange(event)}
-            />
-          </div>
-          <div>
-            <label>Birth Date</label>
-            <input
-              type="date" //yyyy-mm-dd
-              name="birth_date"
-              value={this.getValue("birth_date") && new Date(this.getValue("birth_date")).toISOString().slice(0,10)}
-              onChange={event => this.handleChange(event)}
-            />
-          </div>
-          <div>
-            <label>Balance</label>
-            <input
-              type="number"
-              name="amount"
-              value={this.getValue("amount")}
-              onChange={event => this.handleChange(event)}
-            />
-          </div>
-          <button onClick={this.handleFormSubmit}>
-            {isUpdating ? "Edit Customer" : "Add a new Customer"}
-          </button>
-          {validationError && <p>All fields are mandatory</p>}
-        </div>
+        <SearchField onSearch={(value) => this.setState({search: value})} />
+        <CustomersList items={filteredItems} updateItem={this.updateItem} removeItem={this.removeItem} />
+        <CustomersReportBar items={filteredItems} />
+        <CustomerEditForm customer={currentCustomer} validationError={validationError} onSubmit={this.handleFormSubmit} isUpdating={isUpdating} handleChange={this.handleChange} />
       </div>
     );
   }

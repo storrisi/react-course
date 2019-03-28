@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader'
-import './index.css';
+import './shared/styles/index.css';
 import App from './containers/App';
 import * as serviceWorker from './serviceWorker';
 
