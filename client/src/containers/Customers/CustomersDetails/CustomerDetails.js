@@ -22,9 +22,7 @@ export default class CustomerDetails extends Component {
     }
     
   render() {
-      const {userDetails, currentCustomer} = this.state
-      console.log("this.state", this.state)
-      console.log("this.props", this.props)
+    const {userDetails, currentCustomer} = this.state
     return (
       <div>
         {currentCustomer ? 

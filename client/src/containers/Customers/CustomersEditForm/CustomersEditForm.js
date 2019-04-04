@@ -45,6 +45,24 @@ class CustomerEditForm extends Component {
               onChange={event => handleChange(event)}
             />
           </div>
+          <div>
+            <label>Iban</label>
+            <input
+              type="text"
+              name="iban"
+              value={this.getValue("iban")}
+              onChange={event => handleChange(event)}
+            />
+          </div>
+          <div>
+            <label>Credit Card</label>
+            <input
+              type="text"
+              name="credit_card"
+              value={this.getValue("credit_card")}
+              onChange={event => handleChange(event)}
+            />
+          </div>
           <Button onClick={onSubmit}>{isUpdating ? "Edit Customer" : "Add a new Customer"}</Button>
           {validationError && <p>All fields are mandatory</p>}
         </div>
