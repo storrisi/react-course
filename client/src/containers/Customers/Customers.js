@@ -1,11 +1,19 @@
 import React, { Component } from 'react'
 import uuidv4 from 'uuid/v4'
 import axios from 'axios'
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
+
+import {loadData} from '../../actions/customers'
+
 import CustomersReportBar from './CustomersReportBar'
 import SearchField from '../../components/UI/SearchField';
 import CustomersList from './CustomersList';
 import CustomerEditForm from './CustomersEditForm';
 import CustomerDetails from './CustomersDetails';
+
+
+
 class Customers extends Component {
   constructor(props) {
     super(props)
@@ -20,11 +28,7 @@ class Customers extends Component {
   }
 
   componentDidMount(){
-    axios.get(`${process.env.REACT_APP_API_URL}/api/getCustomers`)
-    .then(result => {
-      console.log(result)
-      this.setState({customers: result.data})
-    })
+    this.props.loadData()
   }
 
   selectItem = item =>
@@ -149,4 +153,18 @@ class Customers extends Component {
   }
 }
 
-export default Customers;
+const mapStateToProps = (state) => ({
+  
+})
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(
+    {
+      loadData
+    },
+    dispatch
+  );
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Customers);
