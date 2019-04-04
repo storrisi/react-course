@@ -3,12 +3,16 @@ import ReactDOM from "react-dom";
 import { AppContainer } from "react-hot-loader";
 import "./shared/styles/index.css";
 import App from "./containers/App";
+import configureStore from './store'
+import {history} from './config/history'
 import * as serviceWorker from "./serviceWorker";
+
+const store = configureStore()
 
 const render = Component => {
   ReactDOM.render(
     <AppContainer>
-      <Component />
+      <Component history={history} store={store} />
     </AppContainer>,
     document.getElementById("root")
   );

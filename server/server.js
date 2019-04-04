@@ -66,21 +66,16 @@ app.get('/api/getCustomers', function(req,res) {
 });
 
 app.get('/api/getCustomer', function(req,res) {
-  
   var url_parts = url.parse(req.url, true);
   var query = url_parts.query;
-  console.log('this is single customer:', query.customer);
-  var customer = sampleArray.find((elem) => {return elem.first_name === query.customer});
-  //console.log('customer:', customer);
+  var customer = sampleArray.find((elem) => {return elem.id === query.customer});
   res.json(customer);
 });
 
 app.post('/api/checkCCNo', function(req,res) {
   let ccNo = req.body.ccNo;
-  console.log('ccNo', ccNo);
   let ccRegex = new RegExp('^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$');
   let isValid = ccRegex.test(ccNo);
-  //console.log('ccNo isValid', isValid);
   let response = {
     ccno: ccNo,
     isValid: isValid
@@ -90,16 +85,27 @@ app.post('/api/checkCCNo', function(req,res) {
 
 app.post('/api/checkIban', function(req,res) {
   let iban = req.body.iban;
-  console.log('iban', iban);
   let ibanRegex = new RegExp('^[A-Z]{2}(?:\s*[0-9a-zA-Z]\s*){20}$');
   let isValid = ibanRegex.test(iban);
-  //console.log('iban isValid', isValid);
   let response = {
     iban: iban,
     isValid: isValid
   }
   res.json(response);
 });
+
+/* LOGIN */ 
+app.get('/api/login', function(req,res) {
+  let userName = req.body.username;
+  let pwd = req.body.pwd;
+  res.json(sampleArray);
+  if (userName === 'test' && pwd === 'test') {
+    res.json({status: success});
+  } else {
+    res.status(400);
+  }
+});
+
 
 /* GET home page. */
 app.get('/*', function(req, res, next) {

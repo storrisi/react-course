@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import uuidv4 from "uuid/v4";
+import { connect } from 'react-redux'
 import { validateFields } from "../../utils/formValidation";
 import CustomersList from "./CustomersList/CustomersList";
 import CustomerEditForm from "./CustomerEditForm";
@@ -92,6 +93,7 @@ class Customers extends Component {
     );
 
   render() {
+    console.log(this.props)
     const {
       customers,
       filter,
@@ -133,4 +135,14 @@ class Customers extends Component {
   }
 }
 
-export default Customers;
+const mapStateToProps = (state) => ({
+  customers: state.customers
+})
+
+const mapDispatchToProps = {
+  
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Customers)
+
+
