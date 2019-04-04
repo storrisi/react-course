@@ -1,37 +1,36 @@
 import React, { Component } from 'react'
 import uuidv4 from 'uuid/v4'
+import axios from 'axios'
 import CustomersReportBar from './CustomersReportBar'
 import SearchField from '../../components/UI/SearchField';
 import CustomersList from './CustomersList';
 import CustomerEditForm from './CustomersEditForm';
+import CustomerDetails from './CustomersDetails';
 class Customers extends Component {
   constructor(props) {
     super(props)
 
-    this.customers = [
-      {
-        id: 1,
-        first_name: 'Simone',
-        last_name: 'Torrisi',
-        birth_date: new Date(),
-        amount: 51000
-      },
-      {
-        id: 2,
-        first_name: 'GianMario',
-        last_name: 'Torrisi',
-        birth_date: new Date(),
-        amount: 32000
-      }
-    ]
-
     this.state = {
       currentCustomer: {},
+      selectedCustomer: {},
       isUpdating: false,
       validationError: null,
-      customers: this.customers
+      customers: []
     }
   }
+
+  componentDidMount(){
+    axios.get(`${process.env.REACT_APP_API_URL}/api/getCustomers`)
+    .then(result => {
+      console.log(result)
+      this.setState({customers: result.data})
+    })
+  }
+
+  selectItem = item =>
+    this.setState({
+      selectedCustomer: item
+    });
 
   updateItem = item =>
     this.setState({
@@ -56,7 +55,7 @@ class Customers extends Component {
     const { customers, currentCustomer, isUpdating } = this.state;
     if (
       !this.validateFields(
-        ["first_name", "last_name", "birth_date", "amount"],
+        ["first_name", "last_name", "birth_date", "balance"],
         currentCustomer
       )
     ) 
@@ -65,7 +64,6 @@ class Customers extends Component {
     const updatedList = [...customers];
     const updatedItem = {
       ...currentCustomer,
-      birth_date: new Date(currentCustomer.birth_date),
       id: currentCustomer.id || uuidv4()
     };
     if (!isUpdating) updatedList.push(updatedItem);
@@ -91,21 +89,26 @@ class Customers extends Component {
     );
   }
 
+  getUserDetails = (id) => {
+    this.setState({userDetails: `Details of user ${id}`})
+  }
+
   render() {
-    const {customers, search, isUpdating, validationError, currentCustomer} = this.state
+    const {customers, search, isUpdating, validationError, currentCustomer, selectedCustomer, userDetails} = this.state
 
     const filteredItems = search ? customers.filter(customer => 
       customer.first_name.toLowerCase().startsWith(search) 
       || customer.last_name.toLowerCase().startsWith(search)
-      || customer.birth_date.toLocaleString().includes(search)
+      || customer.birth_date.includes(search)
     ) : customers
 
     return (
       <div>
         <SearchField onSearch={(value) => this.setState({search: value})} />
-        <CustomersList items={filteredItems} updateItem={this.updateItem} removeItem={this.removeItem} />
+        <CustomersList items={filteredItems} updateItem={this.updateItem} removeItem={this.removeItem} selectItem={this.selectItem} />
         <CustomersReportBar items={filteredItems} />
         <CustomerEditForm customer={currentCustomer} validationError={validationError} onSubmit={this.handleFormSubmit} isUpdating={isUpdating} handleChange={this.handleChange} />
+        <CustomerDetails customer={selectedCustomer} userDetails={userDetails} getUserDetails={this.getUserDetails} />
       </div>
     );
   }

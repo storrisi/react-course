@@ -40,8 +40,8 @@ class CustomerEditForm extends Component {
             <label>Balance</label>
             <input
               type="number"
-              name="amount"
-              value={this.getValue("amount")}
+              name="balance"
+              value={this.getValue("balance")}
               onChange={event => handleChange(event)}
             />
           </div>
