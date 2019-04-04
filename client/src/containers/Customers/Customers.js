@@ -131,8 +131,9 @@ class Customers extends Component {
   }
 
   render() {
-    const {customers, search, isUpdating, validationError, currentCustomer, selectedCustomer, userDetails} = this.state
-
+    const {search, isUpdating, validationError, currentCustomer, selectedCustomer, userDetails} = this.state
+    const {customers} = this.props
+    
     const filteredItems = search ? customers.filter(customer => 
       customer.first_name.toLowerCase().startsWith(search) 
       || customer.last_name.toLowerCase().startsWith(search)
@@ -152,7 +153,7 @@ class Customers extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  
+  customers: state.customers.items
 })
 
 function mapDispatchToProps(dispatch) {
