@@ -12,8 +12,6 @@ import CustomersList from './CustomersList';
 import CustomerEditForm from './CustomersEditForm';
 import CustomerDetails from './CustomersDetails';
 
-
-
 class Customers extends Component {
   constructor(props) {
     super(props)

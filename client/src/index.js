@@ -2,10 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader'
 import {history} from './config/history'
-import store from './store'
+import configureStore from './store'
 import './shared/styles/index.css';
 import App from './containers/App';
 import * as serviceWorker from './serviceWorker';
+
+const store = configureStore()
 
 const render = Component => {
     ReactDOM.render(<AppContainer>
