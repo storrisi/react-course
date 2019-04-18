@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import uuidv4 from 'uuid/v4'
-import axios from 'axios'
+
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 
-import {loadData} from '../../actions/customers'
+import {loadData, validateAll, updateCustomer} from '../../actions/customers'
 
 import CustomersReportBar from './CustomersReportBar'
 import SearchField from '../../components/UI/SearchField';
@@ -27,6 +26,21 @@ class Customers extends Component {
 
   componentDidMount(){
     this.props.loadData()
+  }
+
+  componentDidUpdate(prevProps) {
+    const {updateCustomer, isValid} = this.props
+    const { currentCustomer } = this.state;
+    if (prevProps.isValid !== isValid) {
+      if (isValid === false) return this.setState({validationError: true})
+      if(isValid === true ) updateCustomer(currentCustomer).then(() =>
+        this.setState({
+          isUpdating: false,
+          currentCustomer: {},
+          validationError: false
+        })
+      )
+    }
   }
 
   selectItem = item =>
@@ -54,77 +68,10 @@ class Customers extends Component {
   }
 
   handleFormSubmit = () => {
-    const { customers, currentCustomer, isUpdating } = this.state;
-    this.validateAll()
-      .then(res => {
-        console.log(res)
-        const updatedList = [...customers];
-        const updatedItem = {
-          ...currentCustomer,
-          id: currentCustomer.id || uuidv4()
-        };
-        if (!isUpdating) updatedList.push(updatedItem);
-        else {
-          updatedList.splice(
-            customers.findIndex(customer => customer.id === currentCustomer.id),
-            1,
-            updatedItem
-          );
-        }
-        this.setState({
-          customers: updatedList,
-          isUpdating: false,
-          currentCustomer: {},
-          validationError: false
-        });
-      })
-      .catch(err => console.log(err))
-  };
-
-  validateFields = (fieldsToValidate, itemToValidate) => {
-    return new Promise((resolve, reject) => {
-      if (Object.keys(itemToValidate).length === 0) reject('validateFields failed');
-      if (fieldsToValidate.every(item =>
-        Object.keys(itemToValidate).includes(item)
-      )) {
-        resolve(true)
-      } else {
-        reject('validateFields failed')
-      }
-    })
-    
-  }
-
-  validateIban = iban => {
-    return new Promise((resolve, reject) => {
-      axios.post(`${process.env.REACT_APP_API_URL}/api/checkIban`, {
-      iban
-    })
-    .then(result => {
-      if (!result.data.isValid) reject('iban not valid')
-      resolve(true)
-    })})
-  }
-
-  validateCCNo = ccNo => {
-    return new Promise((resolve, reject) => {
-      axios.post(`${process.env.REACT_APP_API_URL}/api/checkCCNo`, {
-        ccNo
-      })
-      .then(result => {
-        if (!result.data.isValid) reject('cc not valid')
-        resolve(true)
-      })
-    })
-  }
-
-   validateAll = () => {
+    const {validateAll} = this.props
     const { currentCustomer } = this.state;
-    return Promise.all([this.validateFields(
-      ["first_name", "last_name", "birth_date", "balance", "iban", "credit_card"],
-      currentCustomer
-    ), this.validateIban(currentCustomer.iban), this.validateCCNo(currentCustomer.credit_card)])
-  }
+    validateAll(currentCustomer)
+  };
 
   getUserDetails = (id) => {
     this.setState({userDetails: `Details of user ${id}`})
@@ -153,13 +100,16 @@ class Customers extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  customers: state.customers.items
+  customers: state.customers.items,
+  isValid: state.customers.isValid
 })
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
-      loadData
+      loadData,
+      validateAll, 
+      updateCustomer
     },
     dispatch
   );
