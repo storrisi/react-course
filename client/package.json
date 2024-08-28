@@ -44,7 +44,7 @@
     "url-loader": "1.1.1",
     "uuid": "^3.3.2",
     "uuid-v4": "^0.1.0",
-    "webpack": "4.19.1",
+    "webpack": "5.94.0",
     "webpack-dev-server": "3.1.9",
     "webpack-manifest-plugin": "2.0.4",
     "workbox-webpack-plugin": "3.6.3"
